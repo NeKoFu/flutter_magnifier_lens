@@ -12,9 +12,7 @@ A highly customizable magnifying glass widget for Flutter. It uses Fragment Shad
 
 ## Demo
 
-<p align="center">
-  <img height="350px" src="./example/demo/demo.gif" />
-</p>
+![Technical demo](https://raw.githubusercontent.com/NeKoFu/flutter_magnifier_lens/refs/heads/main/example/demo/demo.gif)
 
 ## Getting started
 
