@@ -51,12 +51,8 @@ class MagnifierLens extends StatefulWidget {
   /// An optional transparent PNG overlay image over the lens effect.
   final ui.Image? overlayImage;
 
-  /// Whether to flip the Y axis of the background image before applying effects.
-  /// Useful for fixing upside-down textures on Android devices.
-  final bool flipY;
-
   const MagnifierLens({
-    Key? key,
+    super.key,
     required this.child,
     required this.contentKey,
     this.activated = true,
@@ -72,8 +68,7 @@ class MagnifierLens extends StatefulWidget {
     this.shadowColor = Colors.black45,
     this.shadowBlurRadius = 15.0,
     this.overlayImage,
-    this.flipY = true,
-  }) : super(key: key);
+  });
 
   @override
   State<MagnifierLens> createState() => _MagnifierLensState();
@@ -183,7 +178,6 @@ class _MagnifierLensState extends State<MagnifierLens> {
                 shadowColor: widget.shadowColor,
                 shadowBlurRadius: widget.shadowBlurRadius,
                 overlayImage: widget.overlayImage,
-                flipY: widget.flipY,
               ),
               // We don't absorb pointers so the user can interact with the app
               // Usually the dragging is handled by a parent gesture detector
@@ -209,7 +203,6 @@ class _LensPainter extends CustomPainter {
   final Color shadowColor;
   final double shadowBlurRadius;
   final ui.Image? overlayImage;
-  final bool flipY;
 
   _LensPainter({
     required this.program,
@@ -226,7 +219,6 @@ class _LensPainter extends CustomPainter {
     required this.shadowColor,
     required this.shadowBlurRadius,
     this.overlayImage,
-    required this.flipY,
   });
 
   @override
@@ -242,7 +234,6 @@ class _LensPainter extends CustomPainter {
     shader.setFloat(5, distortion);
     shader.setFloat(6, magnification);
     shader.setFloat(7, aberration);
-    shader.setFloat(8, flipY ? 1.0 : 0.0);
 
     // Sampler
     shader.setImageSampler(0, backgroundImage);
@@ -294,7 +285,6 @@ class _LensPainter extends CustomPainter {
         oldDelegate.showShadow != showShadow ||
         oldDelegate.shadowColor != shadowColor ||
         oldDelegate.shadowBlurRadius != shadowBlurRadius ||
-        oldDelegate.overlayImage != overlayImage ||
-        oldDelegate.flipY != flipY;
+        oldDelegate.overlayImage != overlayImage;
   }
 }

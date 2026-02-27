@@ -22,7 +22,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_magnifier_lens: ^1.0.1+1
+  flutter_magnifier_lens: ^1.0.2
 ```
 
 ## Usage
@@ -95,24 +95,23 @@ class _MagnifierExampleState extends State<MagnifierExample> {
 
 ## Properties
 
-| Property           | Type        | Default            | Description                                                                                                |
-| ------------------ | ----------- | ------------------ | ---------------------------------------------------------------------------------------------------------- |
-| `child`            | `Widget`    | **required**       | The widget hierarchy containing the content to be displayed and magnified.                                 |
-| `contentKey`       | `GlobalKey` | **required**       | A key attached to the RepaintBoundary inside the `child` representing the captured background.             |
-| `activated`        | `bool`      | `true`             | Whether the lens effect is currently active and visible.                                                   |
-| `lensPosition`     | `Offset`    | `Offset(200, 200)` | The screen coordinate representing the center of the magnifier.                                            |
-| `lensRadius`       | `double`    | `100.0`            | The radius of the magnifying lens disc.                                                                    |
-| `distortion`       | `double`    | `0.5`              | The amount of spherical distortion applied toward the edges.                                               |
-| `magnification`    | `double`    | `1.5`              | The base zoom factor of the lens.                                                                          |
-| `aberration`       | `double`    | `0.05`             | The strength of the RGB chromatic aberration split.                                                        |
-| `showBorder`       | `bool`      | `true`             | Whether to draw a border outline around the lens disc.                                                     |
-| `borderColor`      | `Color`     | `Colors.white`     | The color of the lens border.                                                                              |
-| `borderWidth`      | `double`    | `3.0`              | The thickness of the lens border.                                                                          |
-| `showShadow`       | `bool`      | `true`             | Drops an outer shadow beneath the lens.                                                                    |
-| `shadowColor`      | `Color`     | `Colors.black45`   | Color of the lens shadow.                                                                                  |
-| `shadowBlurRadius` | `double`    | `15.0`             | Outer blur radius of the shadow to give depth.                                                             |
-| `overlayImage`     | `ui.Image?` | `null`             | A dynamic layer to draw on top of the lens, such as gloss or reflections.                                  |
-| `flipY`            | `bool`      | `true`             | Fixes upside-down rendering on RepaintBoundaries on specific platforms (e.g. Android). Toggle if backward. |
+| Property           | Type        | Default            | Description                                                                                    |
+| ------------------ | ----------- | ------------------ | ---------------------------------------------------------------------------------------------- |
+| `child`            | `Widget`    | **required**       | The widget hierarchy containing the content to be displayed and magnified.                     |
+| `contentKey`       | `GlobalKey` | **required**       | A key attached to the RepaintBoundary inside the `child` representing the captured background. |
+| `activated`        | `bool`      | `true`             | Whether the lens effect is currently active and visible.                                       |
+| `lensPosition`     | `Offset`    | `Offset(200, 200)` | The screen coordinate representing the center of the magnifier.                                |
+| `lensRadius`       | `double`    | `100.0`            | The radius of the magnifying lens disc.                                                        |
+| `distortion`       | `double`    | `0.5`              | The amount of spherical distortion applied toward the edges.                                   |
+| `magnification`    | `double`    | `1.5`              | The base zoom factor of the lens.                                                              |
+| `aberration`       | `double`    | `0.05`             | The strength of the RGB chromatic aberration split.                                            |
+| `showBorder`       | `bool`      | `true`             | Whether to draw a border outline around the lens disc.                                         |
+| `borderColor`      | `Color`     | `Colors.white`     | The color of the lens border.                                                                  |
+| `borderWidth`      | `double`    | `3.0`              | The thickness of the lens border.                                                              |
+| `showShadow`       | `bool`      | `true`             | Drops an outer shadow beneath the lens.                                                        |
+| `shadowColor`      | `Color`     | `Colors.black45`   | Color of the lens shadow.                                                                      |
+| `shadowBlurRadius` | `double`    | `15.0`             | Outer blur radius of the shadow to give depth.                                                 |
+| `overlayImage`     | `ui.Image?` | `null`             | A dynamic layer to draw on top of the lens, such as gloss or reflections.                      |
 
 ## Example
 
