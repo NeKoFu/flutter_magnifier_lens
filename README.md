@@ -10,6 +10,12 @@ A highly customizable magnifying glass widget for Flutter. It uses Fragment Shad
 - **Image Overlays**: Support for custom decorative PNG overlay layers on top of the lens disc.
 - **High Performance**: Built for Flutter 3.41+ using synchronous pixel decoding (`decodeImageFromPixelsSync`) and single-pass shader rendering.
 
+## Demo
+
+<p align="center">
+  <img height="350px" src="./example/demo/demo.gif" />
+</p>
+
 ## Getting started
 
 Add the package to your `pubspec.yaml`:
