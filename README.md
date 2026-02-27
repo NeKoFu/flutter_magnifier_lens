@@ -16,7 +16,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_magnifier_lens: ^0.0.1
+  flutter_magnifier_lens: ^1.0.0
 ```
 
 ## Usage
@@ -110,7 +110,7 @@ class _MagnifierExampleState extends State<MagnifierExample> {
 
 ## Example
 
-Check out the `example` directory for a complete example app that demonstrates all features.
+Check out the [example](https://github.com/NeKoFu/flutter_magnifier_lens/tree/main/example) directory for a complete example app that demonstrates all features.
 
 ## Contributing
 
