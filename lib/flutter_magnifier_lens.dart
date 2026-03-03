@@ -1,9 +1,12 @@
 library flutter_magnifier_lens;
 
+import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
+import 'dart:async';
 
 /// A magnifying lens widget that applies optical refraction, aberration, and distortion.
 class MagnifierLens extends StatefulWidget {
@@ -82,12 +85,26 @@ class MagnifierLens extends StatefulWidget {
 
 class _MagnifierLensState extends State<MagnifierLens> {
   ui.FragmentProgram? _program;
-  ui.Image? _backgroundSnapshot;
+  final ValueNotifier<ui.Image?> _backgroundNotifier = ValueNotifier(null);
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     _loadShader();
+    _timer = Timer.periodic(const Duration(milliseconds: 50), (_) {
+      if (mounted && widget.activated) {
+        _captureBackground();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _backgroundNotifier.value?.dispose();
+    _backgroundNotifier.dispose();
+    super.dispose();
   }
 
   Future<void> _loadShader() async {
@@ -99,7 +116,7 @@ class _MagnifierLensState extends State<MagnifierLens> {
         });
       }
     } catch (e) {
-      debugPrint("Error loading shader: \$e");
+      debugPrint("Error loading shader: $e");
     }
   }
 
@@ -110,39 +127,39 @@ class _MagnifierLensState extends State<MagnifierLens> {
       final rb = widget.contentKey.currentContext?.findRenderObject();
       if (rb is RenderRepaintBoundary) {
         if (!rb.hasSize || rb.paintBounds.isEmpty || rb.size.width <= 0 || rb.size.height <= 0) {
-          return; // Prevent Impeller crashes when widget is not fully laid out or bounds are empty
+          return; // Prevent Impeller crashes
         }
         
         final imageSync = rb.toImageSync();
         
-        // Final sanity check before keeping the texture
         if (imageSync.width <= 0 || imageSync.height <= 0) {
           imageSync.dispose();
           return;
         }
         
-        bool shouldUpdate = false;
-        if (_backgroundSnapshot == null) {
-          shouldUpdate = true;
-        } else {
+        final oldImage = _backgroundNotifier.value;
+        bool shouldUpdate = true;
+        
+        if (!kIsWeb && oldImage != null) {
           try {
-            shouldUpdate = !_backgroundSnapshot!.isCloneOf(imageSync);
-          } catch (_) {
-            shouldUpdate = true; // Fallback if isCloneOf is somehow unavailable
-          }
+            shouldUpdate = !oldImage.isCloneOf(imageSync);
+          } catch (_) {}
         }
 
         if (shouldUpdate) {
-          setState(() {
-            _backgroundSnapshot?.dispose();
-            _backgroundSnapshot = imageSync;
-          });
+          _backgroundNotifier.value = imageSync;
+          // Defer dispose to next frame so CustomPainter has time to swap out
+          if (oldImage != null) {
+            Future.delayed(const Duration(milliseconds: 100), () {
+              oldImage.dispose();
+            });
+          }
         } else {
           imageSync.dispose();
         }
       }
     } catch (e) {
-      debugPrint("Failed to capture background: $e");
+      // Ignored gracefully
     }
   }
 
@@ -152,35 +169,41 @@ class _MagnifierLensState extends State<MagnifierLens> {
       return widget.child;
     }
 
-    // Schedule background capture
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _captureBackground();
-    });
+    // Schedule an initial capture strictly if empty
+    if (_backgroundNotifier.value == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _captureBackground();
+      });
+    }
 
     return Stack(
       children: [
         widget.child,
-        if (_backgroundSnapshot != null && _program != null)
+        if (_program != null)
           Positioned.fill(
-            child: CustomPaint(
-              painter: _LensPainter(
-                program: _program!,
-                backgroundImage: _backgroundSnapshot!,
-                lensPosition: widget.lensPosition,
-                lensRadius: widget.lensRadius,
-                distortion: widget.distortion,
-                magnification: widget.magnification,
-                aberration: widget.aberration,
-                showBorder: widget.showBorder,
-                borderColor: widget.borderColor,
-                borderWidth: widget.borderWidth,
-                showShadow: widget.showShadow,
-                shadowColor: widget.shadowColor,
-                shadowBlurRadius: widget.shadowBlurRadius,
-                overlayImage: widget.overlayImage,
-              ),
-              // We don't absorb pointers so the user can interact with the app
-              // Usually the dragging is handled by a parent gesture detector
+            child: ValueListenableBuilder<ui.Image?>(
+              valueListenable: _backgroundNotifier,
+              builder: (context, image, child) {
+                if (image == null) return const SizedBox.shrink();
+                return CustomPaint(
+                  painter: _LensPainter(
+                    program: _program!,
+                    backgroundImage: image,
+                    lensPosition: widget.lensPosition,
+                    lensRadius: widget.lensRadius,
+                    distortion: widget.distortion,
+                    magnification: widget.magnification,
+                    aberration: widget.aberration,
+                    showBorder: widget.showBorder,
+                    borderColor: widget.borderColor,
+                    borderWidth: widget.borderWidth,
+                    showShadow: widget.showShadow,
+                    shadowColor: widget.shadowColor,
+                    shadowBlurRadius: widget.shadowBlurRadius,
+                    overlayImage: widget.overlayImage,
+                  ),
+                );
+              },
             ),
           ),
       ],
@@ -223,6 +246,13 @@ class _LensPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Workaround for Flutter Web: when a RepaintBoundary is snapshotted and passed to a shader, 
+    // the original widget might disappear from the screen buffer depending on the Web backend.
+    // We manually draw the captured snapshot beneath the lens to guarantee visibility.
+    if (kIsWeb) {
+      canvas.drawImage(backgroundImage, Offset.zero, Paint());
+    }
+
     final shader = program.fragmentShader();
 
     // Uniforms
@@ -234,6 +264,7 @@ class _LensPainter extends CustomPainter {
     shader.setFloat(5, distortion);
     shader.setFloat(6, magnification);
     shader.setFloat(7, aberration);
+    shader.setFloat(8, (!kIsWeb && Platform.isAndroid) ? 1.0 : 0.0);
 
     // Sampler
     shader.setImageSampler(0, backgroundImage);

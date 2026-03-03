@@ -1,14 +1,18 @@
+## 1.0.3
+
+- Fixed lens inversion on non-Android platforms
+
 ## 1.0.2
 
-- Remove `flipY` property.
+- Removed `flipY` property.
 
 ## 1.0.1+1
 
-- Fix `Getting started` instructions.
+- Fixed `Getting started` instructions.
 
 ## 1.0.1
 
-- Add a technical demo GIF in README to illustrate core features.
+- Added a technical demo GIF in README to illustrate core features.
 
 ## 1.0.0
 

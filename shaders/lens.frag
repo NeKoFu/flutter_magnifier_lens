@@ -8,6 +8,7 @@ uniform float u_lensRadius;
 uniform float u_distortion;
 uniform float u_magnification;
 uniform float u_aberration;
+uniform float u_flipY;
 
 out vec4 fragColor;
 
@@ -37,10 +38,12 @@ void main() {
     vec2 greenUV = greenPos / u_resolution;
     vec2 blueUV = bluePos / u_resolution;
     
-    // Flip Y axis entirely
-    redUV.y = 1.0 - redUV.y;
-    greenUV.y = 1.0 - greenUV.y;
-    blueUV.y = 1.0 - blueUV.y;
+    // Flip Y axis entirely based on platform requirement (u_flipY 1.0 for Native, 0.0 for Web)
+    if (u_flipY > 0.5) {
+        redUV.y = 1.0 - redUV.y;
+        greenUV.y = 1.0 - greenUV.y;
+        blueUV.y = 1.0 - blueUV.y;
+    }
     
     float rCol = texture(u_image, redUV).r;
     float gCol = texture(u_image, greenUV).g;

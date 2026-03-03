@@ -22,7 +22,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_magnifier_lens: ^1.0.2
+  flutter_magnifier_lens: ^1.0.3
 ```
 
 ## Usage
