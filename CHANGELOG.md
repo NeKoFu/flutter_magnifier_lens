@@ -1,3 +1,7 @@
+## 1.0.4
+
+- Added full support for the Web platform.
+
 ## 1.0.3
 
 - Fixed lens inversion on non-Android platforms

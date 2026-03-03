@@ -1,8 +1,6 @@
-library flutter_magnifier_lens;
+library;
 
-import 'dart:io';
 import 'dart:ui' as ui;
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
@@ -264,7 +262,7 @@ class _LensPainter extends CustomPainter {
     shader.setFloat(5, distortion);
     shader.setFloat(6, magnification);
     shader.setFloat(7, aberration);
-    shader.setFloat(8, (!kIsWeb && Platform.isAndroid) ? 1.0 : 0.0);
+    shader.setFloat(8, (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) ? 1.0 : 0.0);
 
     // Sampler
     shader.setImageSampler(0, backgroundImage);
