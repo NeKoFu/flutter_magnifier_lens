@@ -1,12 +1,12 @@
 name: flutter_magnifier_lens
 description: "A highly customizable magnifying glass widget for Flutter."
-version: 1.0.4
+version: 1.0.5
 homepage: https://github.com/NeKoFu/flutter_magnifier_lens
 license: MIT
 
 environment:
-  sdk: ^3.10.7
-  flutter: ">=1.17.0"
+  sdk: ^3.11.0
+  flutter: ">=3.41.1"
 
 dependencies:
   flutter:

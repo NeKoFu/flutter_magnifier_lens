@@ -1,3 +1,7 @@
+## 1.0.5
+
+- Updated minimal SDK and Flutter requirements
+
 ## 1.0.4
 
 - Added full support for the Web platform.
