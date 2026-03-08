@@ -1,3 +1,4 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_magnifier_lens/flutter_magnifier_lens.dart';
 
@@ -40,13 +41,32 @@ class _MyHomePageState extends State<MyHomePage> {
   double _distortion = 0.5;
   bool _showBorder = true;
   bool _showShadow = true;
+  bool _showOverlay = false;
+  ui.Image? _overlayImage;
+  double _overlayScale = 3.0;
+  double _overlayOffsetX = 0.0;
+  double _overlayOffsetY = 0.0;
   final double _borderWidth = 3.0;
 
 
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_overlayImage == null) {
+      _loadOverlayImage("assets/images/magnifier.png");
+    }
+  }
+
+  Future<void> _loadOverlayImage(String path) async {
+    final data = await DefaultAssetBundle.of(context).load(path);
+    final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+    final frame = await codec.getNextFrame();
+    if (mounted) {
+      setState(() {
+        _overlayImage = frame.image;
+      });
+    }
   }
 
   @override
@@ -82,6 +102,9 @@ class _MyHomePageState extends State<MyHomePage> {
           borderColor: Colors.indigo,
           borderWidth: _borderWidth,
           showShadow: _showShadow,
+          overlayImage: _showOverlay ? _overlayImage : null,
+          overlayOffset: Offset(_overlayOffsetX, _overlayOffsetY),
+          overlayScale: _overlayScale,
           child: RepaintBoundary(
             key: _contentKey,
             child: Container(
@@ -123,6 +146,11 @@ class _MyHomePageState extends State<MyHomePage> {
               value: _showShadow,
               onChanged: (val) => setState(() => _showShadow = val),
             ),
+            SwitchListTile(
+              title: const Text('Show Overlay'),
+              value: _showOverlay,
+              onChanged: (val) => setState(() => _showOverlay = val),
+            ),
             ListTile(
               title: const Text('Lens Radius'),
               subtitle: Slider(
@@ -155,6 +183,32 @@ class _MyHomePageState extends State<MyHomePage> {
                 onChanged: (val) => setState(() => _aberration = val),
               ),
             ),
+            if (_showOverlay) ...[
+              ListTile(
+                title: const Text('Overlay Scale'),
+                subtitle: Slider(
+                  min: 0.1, max: 3.0,
+                  value: _overlayScale,
+                  onChanged: (val) => setState(() => _overlayScale = val),
+                ),
+              ),
+              ListTile(
+                title: const Text('Overlay Offset X'),
+                subtitle: Slider(
+                  min: -150.0, max: 150.0,
+                  value: _overlayOffsetX,
+                  onChanged: (val) => setState(() => _overlayOffsetX = val),
+                ),
+              ),
+              ListTile(
+                title: const Text('Overlay Offset Y'),
+                subtitle: Slider(
+                  min: -150.0, max: 150.0,
+                  value: _overlayOffsetY,
+                  onChanged: (val) => setState(() => _overlayOffsetY = val),
+                ),
+              ),
+            ],
           ],
         ),
       ),

@@ -1,6 +1,10 @@
+## 1.0.6
+
+- Added overlay image offset and scale properties.
+
 ## 1.0.5
 
-- Updated minimal SDK and Flutter requirements
+- Updated minimal SDK and Flutter requirements.
 
 ## 1.0.4
 
@@ -8,7 +12,7 @@
 
 ## 1.0.3
 
-- Fixed lens inversion on non-Android platforms
+- Fixed lens inversion on non-Android platforms.
 
 ## 1.0.2
 

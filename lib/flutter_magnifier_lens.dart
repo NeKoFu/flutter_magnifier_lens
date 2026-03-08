@@ -52,6 +52,12 @@ class MagnifierLens extends StatefulWidget {
   /// An optional transparent PNG overlay image over the lens effect.
   final ui.Image? overlayImage;
 
+  /// The offset of the overlay image relative to the lens center.
+  final Offset overlayOffset;
+
+  /// The scale of the overlay image relative to the lens radius.
+  final double overlayScale;
+
   const MagnifierLens({
     super.key,
     required this.child,
@@ -69,6 +75,8 @@ class MagnifierLens extends StatefulWidget {
     this.shadowColor = Colors.black45,
     this.shadowBlurRadius = 15.0,
     this.overlayImage,
+    this.overlayOffset = Offset.zero,
+    this.overlayScale = 1.0,
   });
 
   @override
@@ -199,6 +207,8 @@ class _MagnifierLensState extends State<MagnifierLens> {
                     shadowColor: widget.shadowColor,
                     shadowBlurRadius: widget.shadowBlurRadius,
                     overlayImage: widget.overlayImage,
+                    overlayOffset: widget.overlayOffset,
+                    overlayScale: widget.overlayScale,
                   ),
                 );
               },
@@ -224,6 +234,8 @@ class _LensPainter extends CustomPainter {
   final Color shadowColor;
   final double shadowBlurRadius;
   final ui.Image? overlayImage;
+  final Offset overlayOffset;
+  final double overlayScale;
 
   _LensPainter({
     required this.program,
@@ -240,6 +252,8 @@ class _LensPainter extends CustomPainter {
     required this.shadowColor,
     required this.shadowBlurRadius,
     this.overlayImage,
+    this.overlayOffset = Offset.zero,
+    this.overlayScale = 1.0,
   });
 
   @override
@@ -295,7 +309,10 @@ class _LensPainter extends CustomPainter {
     if (overlayImage != null) {
       // Scale and center the overlay image to fit the lens
       final srcRect = Rect.fromLTWH(0, 0, overlayImage!.width.toDouble(), overlayImage!.height.toDouble());
-      final dstRect = Rect.fromCircle(center: lensPosition, radius: lensRadius);
+      final dstRect = Rect.fromCircle(
+        center: lensPosition + overlayOffset, 
+        radius: lensRadius * overlayScale,
+      );
       canvas.drawImageRect(overlayImage!, srcRect, dstRect, Paint());
     }
   }
@@ -314,6 +331,8 @@ class _LensPainter extends CustomPainter {
         oldDelegate.showShadow != showShadow ||
         oldDelegate.shadowColor != shadowColor ||
         oldDelegate.shadowBlurRadius != shadowBlurRadius ||
-        oldDelegate.overlayImage != overlayImage;
+        oldDelegate.overlayImage != overlayImage ||
+        oldDelegate.overlayOffset != overlayOffset ||
+        oldDelegate.overlayScale != overlayScale;
   }
 }

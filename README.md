@@ -13,7 +13,7 @@ A highly customizable magnifying glass widget for Flutter. It uses Fragment Shad
 ## Demo
 
 <p align="center">
-  <img height="400px" src="https://raw.githubusercontent.com/NeKoFu/flutter_magnifier_lens/refs/heads/main/example/demo/demo.gif" />
+  <img style="height: 500px;" src="https://raw.githubusercontent.com/NeKoFu/flutter_magnifier_lens/refs/heads/main/example/demo/demo.gif" />
 </p>
 
 ## Getting started
@@ -22,7 +22,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_magnifier_lens: ^1.0.5
+  flutter_magnifier_lens: ^1.0.6
 ```
 
 ## Usage
