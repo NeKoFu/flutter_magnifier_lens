@@ -112,6 +112,8 @@ class _MagnifierExampleState extends State<MagnifierExample> {
 | `shadowColor`      | `Color`     | `Colors.black45`   | Color of the lens shadow.                                                                      |
 | `shadowBlurRadius` | `double`    | `15.0`             | Outer blur radius of the shadow to give depth.                                                 |
 | `overlayImage`     | `ui.Image?` | `null`             | A dynamic layer to draw on top of the lens, such as gloss or reflections.                      |
+| `overlayOffset`    | `Offset`    | `Offset(0, 0)`     | The offset of the overlay image relative to the lens center.                                   |
+| `overlayScale`     | `double`    | `1.0`              | The scale of the overlay image relative to the lens size.                                      |
 
 ## Example
 
